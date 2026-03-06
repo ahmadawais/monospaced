@@ -6,7 +6,7 @@ Unicode monospace text converter for quick paste, convert, and copy.
 
 The site takes regular text and swaps supported letters and numbers with Unicode monospace characters so the result keeps a fixed-width, typewriter-style feel across many apps and websites.
 
-Live domain: `https://monospaced.awais.dev`
+Live domain: [monospaced.awais.dev](https://monospaced.awais.dev)
 
 ## What It Does
 
@@ -14,6 +14,40 @@ Live domain: `https://monospaced.awais.dev`
 - Auto-copies converted output when possible
 - Keeps the UI lightweight and mobile-friendly
 - Ships as a single static page with no build step
+
+## CLI
+
+There is also a Rust CLI in [`cli/`](./cli) that ships on npm as `monospaced`.
+
+Run it directly with `npx`:
+
+```bash
+npx monospaced "npx create-next-app 14"
+```
+
+Direct args after install:
+
+```bash
+monospaced "npx create-next-app 14"
+```
+
+Piped input:
+
+```bash
+echo "npx create-next-app 14" | monospaced
+```
+
+Interactive mode:
+
+```bash
+monospaced
+```
+
+Help:
+
+```bash
+monospaced --help
+```
 
 ## Attribution
 

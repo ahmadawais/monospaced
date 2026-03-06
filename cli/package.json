@@ -1,0 +1,50 @@
+{
+  "name": "monospaced",
+  "version": "0.0.1",
+  "description": "CLI that turns plain text into unicode monospace text",
+  "bin": {
+    "monospaced": "./bin/monospaced.cjs"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    "Cargo.toml",
+    "src",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "node scripts/sync-version.mjs && node scripts/build-binaries.mjs",
+    "build:native": "cargo build --release",
+    "sync:version": "node scripts/sync-version.mjs",
+    "test": "cargo test",
+    "test:smoke": "node bin/monospaced.cjs --version",
+    "format": "cargo fmt --all",
+    "format:check": "cargo fmt --all --check",
+    "typecheck": "node --check bin/monospaced.cjs && node --check scripts/build-binaries.mjs && node --check scripts/sync-version.mjs",
+    "version": "node scripts/sync-version.mjs && git add Cargo.toml"
+  },
+  "keywords": [
+    "cli",
+    "rust",
+    "unicode",
+    "monospace",
+    "monospaced",
+    "fixed-width",
+    "typewriter"
+  ],
+  "author": "Ahmad Awais (https://x.com/MrAhmadAwais)",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ahmadawais/monospaced.git",
+    "directory": "cli"
+  },
+  "bugs": {
+    "url": "https://github.com/ahmadawais/monospaced/issues"
+  },
+  "homepage": "https://github.com/ahmadawais/monospaced/tree/main/cli#readme",
+  "packageManager": "pnpm@10.4.1",
+  "engines": {
+    "node": ">=18"
+  }
+}

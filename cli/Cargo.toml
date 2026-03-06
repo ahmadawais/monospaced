@@ -1,0 +1,13 @@
+[package]
+name = "monospaced"
+version = "0.0.1"
+edition = "2021"
+rust-version = "1.70"
+description = "CLI that turns plain text into unicode monospace text"
+license = "Apache-2.0"
+repository = "https://github.com/ahmadawais/monospaced"
+
+[profile.release]
+codegen-units = 1
+lto = true
+strip = true
