@@ -445,10 +445,10 @@
     }
 
     .panel-foot {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr);
-      grid-template-rows: auto minmax(2.75rem, auto);
-      align-content: start;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
     }
 
     .panel-label {
@@ -514,19 +514,12 @@
       overflow: hidden;
     }
 
-    .output-display[data-expanded="true"] {
-      max-height: none;
-      white-space: pre-wrap;
-      word-break: break-word;
-      text-overflow: clip;
-    }
-
     .output-display[data-empty="true"]::before {
       content: attr(data-placeholder);
       color: color-mix(in srgb, var(--muted-foreground) 70%, white 8%);
     }
 
-    .output-display[data-overflowing="true"][data-expanded="false"]::after {
+    .output-display[data-overflowing="true"]::after {
       content: "";
       position: absolute;
       width: 4rem;
@@ -537,52 +530,43 @@
       pointer-events: none;
     }
 
-    .panel-output .panel-foot {
-      justify-items: end;
-    }
-
-    .panel-output .status {
-      justify-content: flex-end;
-      text-align: right;
-    }
-
     .button-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.6rem;
+      gap: 0.45rem;
       align-items: center;
-      min-height: 2.8rem;
+      min-height: 2rem;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 2.8rem;
-      padding: 0 0.95rem;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      min-height: 2rem;
+      padding: 0 0.68rem;
+      border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 999px;
-      background: rgba(20, 20, 24, 0.88);
-      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
-      color: color-mix(in srgb, var(--foreground) 94%, black 6%);
+      background: rgba(15, 15, 18, 0.68);
+      box-shadow: none;
+      color: color-mix(in srgb, var(--muted-foreground) 92%, white 8%);
       font-family: var(--font-mono);
-      font-size: 0.82rem;
+      font-size: 0.68rem;
       font-weight: 500;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       transition:
         color 180ms ease,
         border-color 180ms ease,
-        background 180ms ease,
-        box-shadow 180ms ease;
+        background 180ms ease;
       white-space: nowrap;
+      opacity: 0.9;
     }
 
     .button:hover,
     .button:focus-visible {
-      border-color: rgba(255, 255, 255, 0.18);
-      background: rgba(28, 28, 34, 0.96);
-      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.26);
+      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(22, 22, 26, 0.84);
+      color: var(--foreground);
       outline: none;
     }
 
@@ -591,37 +575,39 @@
     }
 
     .button-primary {
-      border-color: rgba(255, 255, 255, 0.95);
-      background: #f3f3f5;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
-      color: #050505;
+      border-color: rgba(255, 255, 255, 0.12);
+      background: rgba(18, 18, 22, 0.78);
+      color: var(--foreground);
     }
 
     .button-accent {
-      border-color: rgba(255, 255, 255, 0.14);
-      background: rgba(24, 24, 28, 0.94);
+      border-color: rgba(255, 255, 255, 0.08);
+      background: rgba(15, 15, 18, 0.6);
     }
 
     .button-primary:hover,
     .button-primary:focus-visible {
-      border-color: #ffffff;
-      background: #ffffff;
-      color: #050505;
+      border-color: rgba(255, 255, 255, 0.16);
+      background: rgba(24, 24, 28, 0.9);
+      color: var(--foreground);
     }
 
     .button-accent:hover,
     .button-accent:focus-visible {
-      background: rgba(30, 30, 36, 0.98);
+      background: rgba(20, 20, 24, 0.78);
     }
 
     .status {
       margin: 0;
-      min-height: 2.75rem;
+      min-height: auto;
+      margin-left: auto;
       color: color-mix(in srgb, var(--muted-foreground) 86%, white 10%);
       font-size: clamp(0.92rem, 1.2vw, 1rem);
       line-height: 1.4;
       display: flex;
-      align-items: flex-start;
+      align-items: center;
+      justify-content: flex-end;
+      text-align: right;
     }
 
     .status[data-tone="success"] {
@@ -809,6 +795,17 @@
         width: 100%;
       }
 
+      .panel-foot {
+        align-items: flex-start;
+      }
+
+      .status {
+        width: 100%;
+        margin-left: 0;
+        justify-content: flex-start;
+        text-align: left;
+      }
+
       .intro-section::before {
         inset: 0;
       }
@@ -875,7 +872,6 @@
 
               <div class="panel-foot">
                 <div class="button-row">
-                  <button class="button" id="expand-button" type="button" hidden aria-expanded="false">Expand</button>
                   <button class="button button-primary" id="copy-button" type="button">Copy Output</button>
                 </div>
                 <p class="status" id="copy-hint" aria-live="polite">Auto-copy ready.</p>
@@ -956,7 +952,6 @@
     const outputCount = document.getElementById("output-count");
     const pasteButton = document.getElementById("paste-button");
     const copyButton = document.getElementById("copy-button");
-    const expandButton = document.getElementById("expand-button");
     const clearButton = document.getElementById("clear-button");
 
     function toMonospace(text) {
@@ -1001,39 +996,21 @@
       input.style.height = `${Math.min(input.scrollHeight, 192)}px`;
     }
 
-    function updateExpandButton() {
-      const hadExpandedState = output.dataset.expanded === "true";
-
-      output.dataset.expanded = "false";
-
+    function updateOutputOverflow() {
       const overflowing = output.textContent
         ? output.scrollWidth - output.clientWidth > 1 || output.scrollHeight - output.clientHeight > 1
         : false;
 
       output.dataset.overflowing = overflowing ? "true" : "false";
-
-      if (!overflowing) {
-        output.dataset.expanded = "false";
-        expandButton.hidden = true;
-        expandButton.textContent = "Expand";
-        expandButton.setAttribute("aria-expanded", "false");
-        return;
-      }
-
-      output.dataset.expanded = hadExpandedState ? "true" : "false";
-      expandButton.hidden = false;
-      expandButton.textContent = hadExpandedState ? "Collapse" : "Expand";
-      expandButton.setAttribute("aria-expanded", hadExpandedState ? "true" : "false");
     }
 
     function syncOutput(statusMessage) {
       const converted = toMonospace(input.value);
       output.textContent = converted;
       output.dataset.empty = converted ? "false" : "true";
-      output.dataset.expanded = "false";
       updateCounts(input.value, converted);
       autoResizeInput();
-      updateExpandButton();
+      updateOutputOverflow();
 
       if (statusMessage) {
         setStatus(status, statusMessage, "neutral");
@@ -1198,23 +1175,12 @@
       await copyCurrentOutput("Output copied.");
     });
 
-    expandButton.addEventListener("click", () => {
-      const expanded = output.dataset.expanded === "true";
-      output.dataset.expanded = expanded ? "false" : "true";
-      expandButton.textContent = expanded ? "Expand" : "Collapse";
-      expandButton.setAttribute("aria-expanded", expanded ? "false" : "true");
-    });
-
     clearButton.addEventListener("click", () => {
       input.value = "";
       autoResizeInput();
       output.textContent = "";
       output.dataset.empty = "true";
-      output.dataset.expanded = "false";
       output.dataset.overflowing = "false";
-      expandButton.hidden = true;
-      expandButton.textContent = "Expand";
-      expandButton.setAttribute("aria-expanded", "false");
       updateCounts("", "");
       setStatus(status, "Ready for paste.", "neutral");
       setStatus(copyHint, "Auto-copy ready.", "neutral");
@@ -1226,9 +1192,9 @@
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
       autoResizeInput();
-      updateExpandButton();
+      updateOutputOverflow();
     });
-    window.addEventListener("resize", updateExpandButton);
+    window.addEventListener("resize", updateOutputOverflow);
   </script>
 </body>
 </html>
