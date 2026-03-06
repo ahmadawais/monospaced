@@ -18,6 +18,7 @@ Live domain: [monospaced.awais.dev](https://monospaced.awais.dev)
 ## CLI
 
 There is also a Rust CLI in [`cli/`](./cli) that ships on npm as `monospaced`.
+It prints the converted text and also copies it to the clipboard when the OS clipboard is available.
 
 Run it directly with `npx`:
 

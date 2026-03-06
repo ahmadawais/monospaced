@@ -1,6 +1,6 @@
 use std::env;
 use std::io::{self, IsTerminal, Read, Write};
-use std::process;
+use std::process::{self, Command, Stdio};
 use std::sync::{
     atomic::{AtomicBool, Ordering},
     Arc,
@@ -121,6 +121,7 @@ fn run_convert_command(text_parts: &[String]) -> AppResult<()> {
     if !text_parts.is_empty() {
         let input = text_parts.join(" ");
         let converted = with_spinner("Converting", || to_monospace(&input));
+        report_clipboard_result(copy_to_clipboard(&converted));
         println!("{converted}");
         return Ok(());
     }
@@ -130,6 +131,7 @@ fn run_convert_command(text_parts: &[String]) -> AppResult<()> {
         io::stdin().read_to_string(&mut input).map_err(io_error)?;
 
         let converted = with_spinner("Converting", || to_monospace(&input));
+        report_clipboard_result(copy_to_clipboard(&converted));
         print!("{converted}");
         io::stdout().flush().map_err(io_error)?;
         return Ok(());
@@ -164,9 +166,11 @@ fn run_interactive_prompt() -> AppResult<()> {
         }
 
         let converted = with_spinner("Converting", || to_monospace(input));
+        let clipboard_result = copy_to_clipboard(&converted);
         println!();
         println!("{}", style("1", "Monospaced output", colors));
         println!("{converted}");
+        report_clipboard_result(clipboard_result);
         println!("{}", style("2", "Done.", colors));
         return Ok(());
     }
@@ -243,6 +247,84 @@ fn style(code: &str, text: &str, enabled: bool) -> String {
 
 fn io_error(error: io::Error) -> AppError {
     AppError::Message(error.to_string())
+}
+
+fn report_clipboard_result(result: Result<(), String>) {
+    if !io::stderr().is_terminal() {
+        return;
+    }
+
+    match result {
+        Ok(()) => eprintln!("{}", style("2", "Copied to clipboard.", true)),
+        Err(message) => eprintln!("{}", style("2", &format!("Clipboard unavailable: {message}"), true)),
+    }
+}
+
+fn copy_to_clipboard(text: &str) -> Result<(), String> {
+    #[cfg(target_os = "macos")]
+    {
+        return pipe_to_command("pbcopy", &[], text);
+    }
+
+    #[cfg(target_os = "windows")]
+    {
+        return pipe_to_command("cmd", &["/C", "clip"], text);
+    }
+
+    #[cfg(target_os = "linux")]
+    {
+        return copy_to_linux_clipboard(text);
+    }
+
+    #[allow(unreachable_code)]
+    Err("clipboard copy is unsupported on this platform".to_owned())
+}
+
+#[cfg(target_os = "linux")]
+fn copy_to_linux_clipboard(text: &str) -> Result<(), String> {
+    let candidates: [(&str, &[&str]); 3] = [
+        ("wl-copy", &[]),
+        ("xclip", &["-selection", "clipboard"]),
+        ("xsel", &["--clipboard", "--input"]),
+    ];
+
+    let mut last_error = None;
+    for (command, args) in candidates {
+        match pipe_to_command(command, args, text) {
+            Ok(()) => return Ok(()),
+            Err(error) => last_error = Some(error),
+        }
+    }
+
+    Err(last_error.unwrap_or_else(|| "install wl-copy, xclip, or xsel".to_owned()))
+}
+
+fn pipe_to_command(command: &str, args: &[&str], text: &str) -> Result<(), String> {
+    let mut child = Command::new(command)
+        .args(args)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .map_err(|error| error.to_string())?;
+
+    if let Some(mut stdin) = child.stdin.take() {
+        stdin
+            .write_all(text.as_bytes())
+            .map_err(|error| error.to_string())?;
+    }
+
+    let status = child.wait().map_err(|error| error.to_string())?;
+    if status.success() {
+        Ok(())
+    } else {
+        Err(format!(
+            "{command} exited with {}",
+            status
+                .code()
+                .map_or_else(|| "no exit code".to_owned(), |code| code.to_string())
+        ))
+    }
 }
 
 fn print_help() {
