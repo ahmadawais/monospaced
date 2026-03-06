@@ -4,7 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#000000" />
-  <title>Monospace</title>
+  <meta
+    name="description"
+    content="Generate Unicode monospace text instantly. Convert plain text into fixed-width typewriter style characters for Facebook, Twitter, SMS, code snippets, tabular data, ASCII art, and more."
+  />
+  <meta name="robots" content="index,follow,max-image-preview:large" />
+  <meta
+    name="keywords"
+    content="monospace text converter, unicode monospace, fixed-width text generator, typewriter text, terminal text, ascii art text, code text generator"
+  />
+  <meta name="application-name" content="Monospace Text Converter" />
+  <meta name="apple-mobile-web-app-title" content="Monospace" />
+  <meta name="format-detection" content="telephone=no" />
+  <meta
+    property="og:title"
+    content="Monospace Text Converter | Unicode Fixed-Width Generator"
+  />
+  <meta
+    property="og:description"
+    content="Create Unicode monospace text with a fixed-width typewriter look for social posts, code snippets, tabular data, ASCII art, and nostalgic terminal-style copy."
+  />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Monospace" />
+  <meta name="twitter:card" content="summary" />
+  <meta
+    name="twitter:title"
+    content="Monospace Text Converter | Unicode Fixed-Width Generator"
+  />
+  <meta
+    name="twitter:description"
+    content="Generate fixed-width Unicode monospace text for bios, captions, code, ASCII art, tables, and old-school terminal vibes."
+  />
+  <title>Monospace Text Converter | Unicode Fixed-Width Generator</title>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Monospace Text Converter",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "description": "Generate Unicode monospace text instantly for fixed-width typewriter copy, code snippets, tabular data, ASCII art, and terminal-style text.",
+      "browserRequirements": "Requires JavaScript and a modern browser.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  </script>
   <style>
     :root {
       --radius: 0px;
@@ -18,8 +65,8 @@
       --foreground: #fafafa;
       --muted-foreground: #a1a1aa;
       --dim-text: #777777;
-      --purple: #4d21fcc3;
-      --pink: #ff628c5a;
+      --purple: #c7b8f5;
+      --pink: #f3b5d2;
       --teal: #a7eadc;
       --peach: #f6d1ac;
       --blue: #afcdf6;
@@ -50,11 +97,7 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at top left, rgba(199, 184, 245, 0.12), transparent 28%),
-        radial-gradient(circle at top right, rgba(175, 205, 246, 0.12), transparent 24%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 22%),
-        var(--background);
+      background: var(--background);
       color: var(--foreground);
       font-family: var(--font-sans);
       -webkit-font-smoothing: antialiased;
@@ -85,8 +128,7 @@
       position: relative;
       width: var(--container);
       margin: 0 auto;
-      border-left: 1px solid var(--border);
-      border-right: 1px solid var(--border);
+      border: 1px solid var(--border);
       min-height: calc(100vh - clamp(2rem, 6vw, 4rem));
       box-shadow: var(--shadow);
     }
@@ -95,11 +137,7 @@
       position: relative;
       min-height: calc(100vh - clamp(2rem, 6vw, 4rem));
       overflow: hidden;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 24%),
-        linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 38%),
-        var(--surface);
-      backdrop-filter: blur(16px);
+      background: var(--background);
     }
 
     .corner-box {
@@ -239,11 +277,28 @@
 
     .gradient-tile {
       position: absolute;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       mix-blend-mode: normal;
-      opacity: 0.92;
-      z-index: 1;
+      opacity: 0.72;
+      z-index: 0;
       overflow: hidden;
+      pointer-events: none;
+      filter: saturate(0.92) brightness(0.92);
+      box-shadow: 0 18px 48px rgba(0, 0, 0, 0.22);
+    }
+
+    .gradient-tile::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(rgba(255, 255, 255, 0.24) 0.5px, transparent 0.7px),
+        radial-gradient(rgba(0, 0, 0, 0.16) 0.5px, transparent 0.7px),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.14), transparent 48%, rgba(0, 0, 0, 0.08));
+      background-size: 9px 9px, 13px 13px, 100% 100%;
+      background-position: 0 0, 3px 4px, 0 0;
+      opacity: 0.24;
+      mix-blend-mode: screen;
     }
 
     .gradient-tile::after {
@@ -252,33 +307,36 @@
       inset: 0;
       background-image:
         linear-gradient(rgba(255, 255, 255, 0.1), transparent),
-        radial-gradient(rgba(255, 255, 255, 0.2) 0.5px, transparent 0.5px);
-      background-size: 100% 100%, 10px 10px;
-      opacity: 0.12;
+        repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0 1px, transparent 1px 7px),
+        repeating-linear-gradient(180deg, rgba(0, 0, 0, 0.05) 0 1px, transparent 1px 9px);
+      background-size: 100% 100%, 100% 100%, 100% 100%;
+      opacity: 0.18;
       mix-blend-mode: soft-light;
     }
 
     .tile-one {
-      top: 9%;
-      right: 8%;
-      width: clamp(100px, 14vw, 180px);
-      height: clamp(76px, 11vw, 132px);
+      top: auto;
+      bottom: 22%;
+      right: 7%;
+      width: clamp(96px, 12vw, 156px);
+      height: clamp(74px, 9vw, 118px);
       background: linear-gradient(135deg, var(--purple), var(--pink));
     }
 
     .tile-two {
-      top: 30%;
-      right: 21%;
-      width: clamp(86px, 12vw, 148px);
-      height: clamp(70px, 9vw, 116px);
-      background: linear-gradient(135deg, var(--teal), #fad0009e);
+      top: auto;
+      bottom: 9%;
+      right: 24%;
+      width: clamp(76px, 10vw, 126px);
+      height: clamp(62px, 8vw, 98px);
+      background: linear-gradient(135deg, var(--teal), #d9fff5);
     }
 
     .tile-three {
-      bottom: 12%;
-      right: 10%;
-      width: clamp(120px, 17vw, 220px);
-      height: clamp(80px, 11vw, 142px);
+      bottom: 4%;
+      right: 6%;
+      width: clamp(132px, 18vw, 240px);
+      height: clamp(94px, 12vw, 162px);
       background: linear-gradient(135deg, var(--peach), var(--blue));
     }
 
@@ -287,9 +345,9 @@
       z-index: 2;
       display: grid;
       gap: clamp(1.25rem, 3vw, 2.5rem);
-      align-content: center;
+      align-content: start;
       min-height: calc(100vh - clamp(2rem, 6vw, 4rem));
-      padding: clamp(1.5rem, 4vw, 3.5rem);
+      padding: clamp(1rem, 3vw, 1.5rem) clamp(1.5rem, 4vw, 3.5rem) clamp(2rem, 5vw, 3.5rem);
     }
 
     .eyebrow {
@@ -303,11 +361,17 @@
 
     .title {
       margin: 0;
-      max-width: 12ch;
-      font-size: clamp(3.2rem, 8.8vw, 8rem);
-      line-height: 0.92;
+      max-width: none;
+      font-size: clamp(4.5rem, 9.6vw, 8.8rem);
+      line-height: 0.9;
       letter-spacing: -0.06em;
-      text-wrap: balance;
+    }
+
+    .title-line {
+      display: block;
+      font-size: inherit;
+      letter-spacing: inherit;
+      white-space: nowrap;
     }
 
     .lead {
@@ -321,13 +385,7 @@
     .workspace {
       display: grid;
       gap: 1rem;
-      grid-template-columns: 1fr;
-    }
-
-    @media (min-width: 960px) {
-      .workspace {
-        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      }
+      grid-template-columns: minmax(0, 1fr);
     }
 
     .panel {
@@ -337,11 +395,27 @@
       gap: 1rem;
       padding: clamp(1rem, 2.4vw, 1.5rem);
       min-height: min(54vh, 540px);
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
-        var(--surface-strong);
+      background: var(--background);
       border: 1px solid var(--border);
       overflow: hidden;
+    }
+
+    .panel-input {
+      grid-template-rows: auto auto auto;
+      min-height: auto;
+    }
+
+    .panel-input .text-field {
+      height: auto;
+      min-height: clamp(4.75rem, 8vw, 5.75rem);
+      max-height: 12rem;
+      overflow-y: auto;
+      font-size: clamp(1.3rem, 2vw, 1.9rem);
+    }
+
+    .panel-output {
+      grid-template-rows: auto auto auto;
+      min-height: auto;
     }
 
     .panel::before {
@@ -418,54 +492,126 @@
     }
 
     .text-field:focus {
-      border-color: color-mix(in srgb, var(--blue) 42%, var(--border) 58%);
-      box-shadow: inset 0 0 0 1px rgba(175, 205, 246, 0.18);
+      border-color: rgba(255, 255, 255, 0.14);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
     }
 
-    .output-field {
-      background: rgba(0, 0, 0, 0.44);
+    .output-display {
+      position: relative;
+      z-index: 1;
+      min-height: 1.45em;
+      max-height: 1.45em;
+      padding: 0.45rem 0 0;
+      border-top: 1px solid var(--border);
+      color: var(--foreground);
+      font-family: var(--font-mono);
+      font-size: clamp(1.2rem, 2.2vw, 1.85rem);
+      line-height: 1.45;
+      letter-spacing: -0.03em;
+      white-space: nowrap;
+      word-break: normal;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .output-display[data-expanded="true"] {
+      max-height: none;
+      white-space: pre-wrap;
+      word-break: break-word;
+      text-overflow: clip;
+    }
+
+    .output-display[data-empty="true"]::before {
+      content: attr(data-placeholder);
+      color: color-mix(in srgb, var(--muted-foreground) 70%, white 8%);
+    }
+
+    .output-display[data-overflowing="true"][data-expanded="false"]::after {
+      content: "";
+      position: absolute;
+      width: 4rem;
+      right: 0;
+      bottom: 0;
+      top: 0;
+      background: linear-gradient(90deg, rgba(10, 10, 11, 0), rgba(10, 10, 11, 0.98));
+      pointer-events: none;
+    }
+
+    .panel-output .panel-foot {
+      justify-items: end;
+    }
+
+    .panel-output .status {
+      justify-content: flex-end;
+      text-align: right;
     }
 
     .button-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.6rem;
       align-items: center;
-      min-height: 3.35rem;
+      min-height: 2.8rem;
     }
 
     .button {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-height: 3.35rem;
-      padding: 0 1.2rem;
-      border: 1px solid var(--border);
+      min-height: 2.8rem;
+      padding: 0 0.95rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 999px;
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--foreground);
+      background: rgba(20, 20, 24, 0.88);
+      box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+      color: color-mix(in srgb, var(--foreground) 94%, black 6%);
       font-family: var(--font-mono);
-      font-size: 0.94rem;
+      font-size: 0.82rem;
+      font-weight: 500;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      transition:
+        color 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease,
+        box-shadow 180ms ease;
       white-space: nowrap;
     }
 
     .button:hover,
     .button:focus-visible {
-      transform: translateY(-1px);
-      border-color: color-mix(in srgb, var(--foreground) 24%, var(--border) 76%);
+      border-color: rgba(255, 255, 255, 0.18);
+      background: rgba(28, 28, 34, 0.96);
+      box-shadow: 0 14px 30px rgba(0, 0, 0, 0.26);
       outline: none;
     }
 
+    .button[hidden] {
+      display: none;
+    }
+
     .button-primary {
-      background: linear-gradient(135deg, rgba(250, 250, 250, 0.98), rgba(230, 230, 234, 0.96));
+      border-color: rgba(255, 255, 255, 0.95);
+      background: #f3f3f5;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
       color: #050505;
     }
 
     .button-accent {
-      background: linear-gradient(135deg, rgba(167, 234, 220, 0.18), rgba(175, 205, 246, 0.2));
+      border-color: rgba(255, 255, 255, 0.14);
+      background: rgba(24, 24, 28, 0.94);
+    }
+
+    .button-primary:hover,
+    .button-primary:focus-visible {
+      border-color: #ffffff;
+      background: #ffffff;
+      color: #050505;
+    }
+
+    .button-accent:hover,
+    .button-accent:focus-visible {
+      background: rgba(30, 30, 36, 0.98);
     }
 
     .status {
@@ -486,6 +632,102 @@
       color: #ffb6b6;
     }
 
+    .intro-section {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 0;
+      padding: clamp(1rem, 2.4vw, 1.5rem);
+      border: 1px solid var(--border);
+      isolation: isolate;
+      overflow: hidden;
+    }
+
+    .intro-section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: var(--background);
+      pointer-events: none;
+    }
+
+    .intro-copy {
+      min-width: 0;
+      padding-bottom: 1.25rem;
+      max-width: none;
+    }
+
+    .intro-bottom {
+      display: grid;
+      gap: 0;
+    }
+
+    .intro-lead-block {
+      display: grid;
+      gap: 1rem;
+      padding-top: 1.25rem;
+    }
+
+    .intro-facts {
+      display: grid;
+      gap: 0.75rem;
+      max-width: 42rem;
+    }
+
+    .intro-fact {
+      margin: 0;
+      color: color-mix(in srgb, var(--muted-foreground) 84%, white 12%);
+      font-size: clamp(0.98rem, 1.35vw, 1.08rem);
+      line-height: 1.55;
+    }
+
+    .intro-side {
+      display: grid;
+      gap: 0.85rem;
+      align-content: start;
+      max-width: 32rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .intro-side p {
+      margin: 0;
+      color: color-mix(in srgb, var(--muted-foreground) 82%, white 10%);
+      font-size: clamp(1rem, 1.45vw, 1.08rem);
+      line-height: 1.55;
+    }
+
+    @media (min-width: 960px) {
+      .intro-section {
+        grid-template-columns: minmax(0, 1fr);
+        align-items: start;
+      }
+
+      .intro-copy {
+        padding-bottom: 1.5rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .intro-bottom {
+        grid-template-columns: minmax(0, 1.18fr) minmax(22rem, 0.82fr);
+        align-items: start;
+      }
+
+      .intro-lead-block {
+        padding-top: 1.5rem;
+        padding-right: clamp(1.5rem, 3vw, 3rem);
+      }
+
+      .intro-side {
+        max-width: none;
+        padding-top: 1.5rem;
+        padding-left: clamp(1.5rem, 3vw, 3rem);
+        border-top: 0;
+        border-left: 1px solid var(--border);
+      }
+    }
+
     .micro-copy {
       display: grid;
       gap: 0.5rem;
@@ -497,6 +739,39 @@
       color: color-mix(in srgb, var(--muted-foreground) 82%, white 12%);
       font-size: clamp(0.98rem, 1.5vw, 1.08rem);
       line-height: 1.5;
+    }
+
+    .site-credit {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: 0.6rem;
+      padding: 1rem clamp(1rem, 2.4vw, 1.5rem);
+      border: 1px solid var(--border);
+      background: var(--background);
+    }
+
+    .site-credit p {
+      margin: 0;
+      color: color-mix(in srgb, var(--muted-foreground) 84%, white 10%);
+      font-family: var(--font-mono);
+      font-size: clamp(0.82rem, 1vw, 0.95rem);
+      line-height: 1.5;
+      letter-spacing: 0.04em;
+    }
+
+    .site-credit a {
+      color: var(--foreground);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.16);
+      transition: border-color 180ms ease, color 180ms ease;
+    }
+
+    .site-credit a:hover,
+    .site-credit a:focus-visible {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.5);
+      outline: none;
     }
 
     .flicker-in {
@@ -517,11 +792,13 @@
       .tile-one,
       .tile-two,
       .tile-three {
-        opacity: 0.58;
+        opacity: 0.18;
       }
 
       .content {
         min-height: auto;
+        padding-left: 1rem;
+        padding-right: 1rem;
       }
 
       .panel {
@@ -530,6 +807,10 @@
 
       .button {
         width: 100%;
+      }
+
+      .intro-section::before {
+        inset: 0;
       }
     }
   </style>
@@ -551,14 +832,8 @@
         <div class="gradient-tile tile-three" aria-hidden="true"></div>
 
         <div class="content">
-          <header class="micro-copy">
-            <p class="eyebrow">// monospace</p>
-            <h1 class="title">Paste text. Get monospaced. Copy fast.</h1>
-            <!-- <p class="lead">Paste text, it copies the monospaced version instantly.</p> -->
-          </header>
-
           <section class="workspace" aria-label="Text converter">
-            <article class="panel">
+            <article class="panel panel-input">
               <div class="panel-head">
                 <p class="panel-label">Input</p>
                 <span class="meta" id="input-count">0 chars</span>
@@ -567,6 +842,7 @@
               <textarea
                 class="text-field"
                 id="source-text"
+                rows="1"
                 spellcheck="false"
                 autocapitalize="off"
                 autocomplete="off"
@@ -584,28 +860,55 @@
               </div>
             </article>
 
-            <article class="panel">
+            <article class="panel panel-output">
               <div class="panel-head">
                 <p class="panel-label">Monospace Output</p>
                 <span class="meta" id="output-count">0 chars</span>
               </div>
 
-              <textarea
-                class="text-field output-field"
+              <div
+                class="output-display"
                 id="output-text"
-                spellcheck="false"
-                readonly
-                placeholder="…"
-              ></textarea>
+                data-empty="true"
+                data-placeholder="Converted monospace text appears here."
+              ></div>
 
               <div class="panel-foot">
                 <div class="button-row">
+                  <button class="button" id="expand-button" type="button" hidden aria-expanded="false">Expand</button>
                   <button class="button button-primary" id="copy-button" type="button">Copy Output</button>
                 </div>
                 <p class="status" id="copy-hint" aria-live="polite">Auto-copy ready.</p>
               </div>
             </article>
           </section>
+
+          <section class="intro-section" aria-labelledby="page-title">
+            <header class="micro-copy intro-copy">
+              <p class="eyebrow">// monospaced</p>
+              <h1 class="title" id="page-title">Monospace<br /><span class="title-line">Text Converter</span></h1>
+            </header>
+
+            <div class="intro-bottom">
+              <div class="intro-lead-block">
+                <p class="lead">Monospace, aka fixed-width text, keeps every character spaced consistently. Use this monospace tool to generate Unicode typewriter-style text you can copy into Facebook, Twitter, SMS, bios, captions, and more.</p>
+                <div class="intro-facts">
+                  <p class="intro-fact">Useful for code snippets, tables, columns, and spreadsheet-style layouts where aligned spacing matters.</p>
+                  <p class="intro-fact">Also great for ASCII art, retro terminal posts, and anything that needs a typewriter or old-school computer feel.</p>
+                </div>
+              </div>
+
+              <div class="intro-side">
+                <p>This generator helps your text keep a fixed-width look while still behaving like normal copy you can paste across the web.</p>
+                <p>Because it uses Unicode monospace characters, the result usually works in social apps, messages, notes, docs, and websites without needing a custom font.</p>
+                <p>Paste, convert, copy, and use it anywhere you want clean spacing with a technical or nostalgic vibe.</p>
+              </div>
+            </div>
+          </section>
+
+          <footer class="site-credit">
+            <p>Made by (human) <a href="https://x.com/MrAhmadAwais" target="_blank" rel="noreferrer">Ahmad Awais</a> and (agent) <a href="https://commandcode.ai" target="_blank" rel="noreferrer">Command Code</a>.</p>
+          </footer>
         </div>
       </div>
     </section>
@@ -654,6 +957,7 @@
     const outputCount = document.getElementById("output-count");
     const pasteButton = document.getElementById("paste-button");
     const copyButton = document.getElementById("copy-button");
+    const expandButton = document.getElementById("expand-button");
     const clearButton = document.getElementById("clear-button");
 
     function toMonospace(text) {
@@ -693,16 +997,62 @@
       outputCount.textContent = `${converted.length} chars`;
     }
 
+    function autoResizeInput() {
+      input.style.height = "auto";
+      input.style.height = `${Math.min(input.scrollHeight, 192)}px`;
+    }
+
+    function updateExpandButton() {
+      const hadExpandedState = output.dataset.expanded === "true";
+
+      output.dataset.expanded = "false";
+
+      const overflowing = output.textContent
+        ? output.scrollWidth - output.clientWidth > 1 || output.scrollHeight - output.clientHeight > 1
+        : false;
+
+      output.dataset.overflowing = overflowing ? "true" : "false";
+
+      if (!overflowing) {
+        output.dataset.expanded = "false";
+        expandButton.hidden = true;
+        expandButton.textContent = "Expand";
+        expandButton.setAttribute("aria-expanded", "false");
+        return;
+      }
+
+      output.dataset.expanded = hadExpandedState ? "true" : "false";
+      expandButton.hidden = false;
+      expandButton.textContent = hadExpandedState ? "Collapse" : "Expand";
+      expandButton.setAttribute("aria-expanded", hadExpandedState ? "true" : "false");
+    }
+
     function syncOutput(statusMessage) {
       const converted = toMonospace(input.value);
-      output.value = converted;
+      output.textContent = converted;
+      output.dataset.empty = converted ? "false" : "true";
+      output.dataset.expanded = "false";
       updateCounts(input.value, converted);
+      autoResizeInput();
+      updateExpandButton();
 
       if (statusMessage) {
         setStatus(status, statusMessage, "neutral");
       }
 
       return converted;
+    }
+
+    function selectOutputText() {
+      if (!output.textContent) {
+        return;
+      }
+
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(output);
+      selection.removeAllRanges();
+      selection.addRange(range);
     }
 
     function insertTextAtCursor(textarea, text) {
@@ -793,8 +1143,7 @@
       }
 
       if (selectOnFailure) {
-        output.focus();
-        output.select();
+        selectOutputText();
       }
 
       setStatus(copyHint, failureMessage, "error");
@@ -850,9 +1199,23 @@
       await copyCurrentOutput("Output copied.");
     });
 
+    expandButton.addEventListener("click", () => {
+      const expanded = output.dataset.expanded === "true";
+      output.dataset.expanded = expanded ? "false" : "true";
+      expandButton.textContent = expanded ? "Expand" : "Collapse";
+      expandButton.setAttribute("aria-expanded", expanded ? "false" : "true");
+    });
+
     clearButton.addEventListener("click", () => {
       input.value = "";
-      output.value = "";
+      autoResizeInput();
+      output.textContent = "";
+      output.dataset.empty = "true";
+      output.dataset.expanded = "false";
+      output.dataset.overflowing = "false";
+      expandButton.hidden = true;
+      expandButton.textContent = "Expand";
+      expandButton.setAttribute("aria-expanded", "false");
       updateCounts("", "");
       setStatus(status, "Ready for paste.", "neutral");
       setStatus(copyHint, "Auto-copy ready.", "neutral");
@@ -863,7 +1226,10 @@
     window.addEventListener("load", () => {
       input.focus();
       input.setSelectionRange(input.value.length, input.value.length);
+      autoResizeInput();
+      updateExpandButton();
     });
+    window.addEventListener("resize", updateExpandButton);
   </script>
 </body>
 </html>
