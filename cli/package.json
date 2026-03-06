@@ -1,6 +1,6 @@
 {
   "name": "monospaced",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "CLI that turns plain text into unicode monospace text",
   "bin": {
     "monospaced": "./bin/monospaced.cjs"

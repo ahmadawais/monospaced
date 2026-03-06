@@ -1,6 +1,6 @@
 [package]
 name = "monospaced"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
 rust-version = "1.70"
 description = "CLI that turns plain text into unicode monospace text"
