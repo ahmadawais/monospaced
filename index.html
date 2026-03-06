@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#000000" />
+  <title>Monospace</title>
+  <style>
+    :root {
+      --radius: 0px;
+      --background: #000000;
+      --card: #0a0a0b;
+      --surface: rgba(10, 10, 11, 0.86);
+      --surface-strong: rgba(17, 17, 19, 0.96);
+      --border: hsl(240 4% 14%);
+      --border-muted: hsl(240 2% 14%);
+      --dash-color: #181818;
+      --foreground: #fafafa;
+      --muted-foreground: #a1a1aa;
+      --dim-text: #777777;
+      --purple: #4d21fcc3;
+      --pink: #ff628c5a;
+      --teal: #a7eadc;
+      --peach: #f6d1ac;
+      --blue: #afcdf6;
+      --shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
+      --container: min(1189px, 90vw);
+      --font-sans: "SF Pro Display", "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: "SF Mono", "JetBrains Mono", "Fira Code", "Menlo", monospace;
+    }
+
+    @media (min-width: 768px) {
+      :root {
+        --container: min(1189px, 80vw);
+      }
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      color-scheme: dark;
+      background: var(--background);
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at top left, rgba(199, 184, 245, 0.12), transparent 28%),
+        radial-gradient(circle at top right, rgba(175, 205, 246, 0.12), transparent 24%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 22%),
+        var(--background);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    button,
+    textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
+    .page {
+      position: relative;
+      overflow: hidden;
+      padding: clamp(1rem, 4vw, 2rem);
+    }
+
+    .hero-shell {
+      position: relative;
+      width: var(--container);
+      margin: 0 auto;
+      border-left: 1px solid var(--border);
+      border-right: 1px solid var(--border);
+      min-height: calc(100vh - clamp(2rem, 6vw, 4rem));
+      box-shadow: var(--shadow);
+    }
+
+    .hero-card {
+      position: relative;
+      min-height: calc(100vh - clamp(2rem, 6vw, 4rem));
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 24%),
+        linear-gradient(135deg, rgba(255, 255, 255, 0.03), transparent 38%),
+        var(--surface);
+      backdrop-filter: blur(16px);
+    }
+
+    .corner-box {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: var(--background);
+      border: 1px solid var(--border);
+      z-index: 5;
+    }
+
+    .corner-top-left {
+      top: 0;
+      left: 0;
+      transform: translate(-6px, -6px);
+    }
+
+    .corner-top-right {
+      top: 0;
+      right: 0;
+      transform: translate(6px, -6px);
+    }
+
+    .corner-bottom-left {
+      bottom: 0;
+      left: 0;
+      transform: translate(-6px, 6px);
+    }
+
+    .corner-bottom-right {
+      bottom: 0;
+      right: 0;
+      transform: translate(6px, 6px);
+    }
+
+    @media (min-width: 640px) {
+      .corner-box {
+        width: 20px;
+        height: 20px;
+      }
+
+      .corner-top-left {
+        transform: translate(-10px, -10px);
+      }
+
+      .corner-top-right {
+        transform: translate(10px, -10px);
+      }
+
+      .corner-bottom-left {
+        transform: translate(-10px, 10px);
+      }
+
+      .corner-bottom-right {
+        transform: translate(10px, 10px);
+      }
+    }
+
+    .hero-grid,
+    .hero-grid-mobile {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      user-select: none;
+      z-index: 0;
+    }
+
+    .hero-grid {
+      display: none;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(9, minmax(0, 1fr));
+    }
+
+    .hero-grid-mobile {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      grid-template-rows: repeat(8, minmax(0, 1fr));
+    }
+
+    @media (min-width: 760px) {
+      .hero-grid {
+        display: grid;
+      }
+
+      .hero-grid-mobile {
+        display: none;
+      }
+    }
+
+    .grid-cell {
+      min-height: 44px;
+    }
+
+    .dash-right {
+      border-right: 1px dashed transparent;
+      background-image: repeating-linear-gradient(to bottom, var(--dash-color) 0 5px, transparent 5px 7px);
+      background-position: right;
+      background-repeat: repeat-y;
+      background-size: 1px 7px;
+    }
+
+    .dash-top {
+      border-top: 1px dashed transparent;
+      background-image: repeating-linear-gradient(to right, var(--dash-color) 0 5px, transparent 5px 7px);
+      background-position: left top;
+      background-repeat: repeat-x;
+      background-size: 7px 1px;
+    }
+
+    .dash-top-right {
+      border-top: 1px dashed transparent;
+      border-right: 1px dashed transparent;
+      background-image:
+        repeating-linear-gradient(to bottom, var(--dash-color) 0 5px, transparent 5px 7px),
+        repeating-linear-gradient(to right, var(--dash-color) 0 5px, transparent 5px 7px);
+      background-position: right top, left top;
+      background-repeat: repeat-y, repeat-x;
+      background-size: 1px 7px, 7px 1px;
+    }
+
+    .dash-top-solid {
+      border-top: 1px solid var(--dash-color);
+    }
+
+    .dash-top-right-solid {
+      border-top: 1px solid var(--dash-color);
+      border-right: 1px solid var(--dash-color);
+    }
+
+    .dash-right-solid {
+      border-right: 1px solid var(--dash-color);
+    }
+
+    .dash-bottom-solid {
+      border-bottom: 1px solid var(--dash-color);
+    }
+
+    .gradient-tile {
+      position: absolute;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      mix-blend-mode: normal;
+      opacity: 0.92;
+      z-index: 1;
+      overflow: hidden;
+    }
+
+    .gradient-tile::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.1), transparent),
+        radial-gradient(rgba(255, 255, 255, 0.2) 0.5px, transparent 0.5px);
+      background-size: 100% 100%, 10px 10px;
+      opacity: 0.12;
+      mix-blend-mode: soft-light;
+    }
+
+    .tile-one {
+      top: 9%;
+      right: 8%;
+      width: clamp(100px, 14vw, 180px);
+      height: clamp(76px, 11vw, 132px);
+      background: linear-gradient(135deg, var(--purple), var(--pink));
+    }
+
+    .tile-two {
+      top: 30%;
+      right: 21%;
+      width: clamp(86px, 12vw, 148px);
+      height: clamp(70px, 9vw, 116px);
+      background: linear-gradient(135deg, var(--teal), #fad0009e);
+    }
+
+    .tile-three {
+      bottom: 12%;
+      right: 10%;
+      width: clamp(120px, 17vw, 220px);
+      height: clamp(80px, 11vw, 142px);
+      background: linear-gradient(135deg, var(--peach), var(--blue));
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+      display: grid;
+      gap: clamp(1.25rem, 3vw, 2.5rem);
+      align-content: center;
+      min-height: calc(100vh - clamp(2rem, 6vw, 4rem));
+      padding: clamp(1.5rem, 4vw, 3.5rem);
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: color-mix(in srgb, var(--muted-foreground) 72%, white 10%);
+      font-family: var(--font-mono);
+      font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .title {
+      margin: 0;
+      max-width: 12ch;
+      font-size: clamp(3.2rem, 8.8vw, 8rem);
+      line-height: 0.92;
+      letter-spacing: -0.06em;
+      text-wrap: balance;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 32rem;
+      color: color-mix(in srgb, var(--muted-foreground) 86%, white 12%);
+      font-size: clamp(1.05rem, 2.1vw, 1.5rem);
+      line-height: 1.45;
+    }
+
+    .workspace {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: 1fr;
+    }
+
+    @media (min-width: 960px) {
+      .workspace {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      position: relative;
+      display: grid;
+      grid-template-rows: auto minmax(18rem, 1fr) auto;
+      gap: 1rem;
+      padding: clamp(1rem, 2.4vw, 1.5rem);
+      min-height: min(54vh, 540px);
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 24%),
+        var(--surface-strong);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        repeating-linear-gradient(to right, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 18px),
+        repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 0 1px, transparent 1px 18px);
+      opacity: 0.14;
+      pointer-events: none;
+    }
+
+    .panel-head,
+    .panel-foot {
+      position: relative;
+      z-index: 1;
+      gap: 1rem;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .panel-foot {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(2.75rem, auto);
+      align-content: start;
+    }
+
+    .panel-label {
+      margin: 0;
+      color: color-mix(in srgb, var(--muted-foreground) 80%, white 10%);
+      font-family: var(--font-mono);
+      font-size: clamp(0.86rem, 1.2vw, 1rem);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .meta {
+      color: var(--dim-text);
+      font-family: var(--font-mono);
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .text-field {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
+      color: var(--foreground);
+      padding: clamp(1rem, 2vw, 1.4rem);
+      font-family: var(--font-mono);
+      font-size: clamp(1.15rem, 2.5vw, 1.8rem);
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+      outline: none;
+      border-radius: var(--radius);
+      resize: none;
+    }
+
+    .text-field::placeholder {
+      color: color-mix(in srgb, var(--muted-foreground) 68%, black 6%);
+    }
+
+    .text-field:focus {
+      border-color: color-mix(in srgb, var(--blue) 42%, var(--border) 58%);
+      box-shadow: inset 0 0 0 1px rgba(175, 205, 246, 0.18);
+    }
+
+    .output-field {
+      background: rgba(0, 0, 0, 0.44);
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+      min-height: 3.35rem;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 3.35rem;
+      padding: 0 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--foreground);
+      font-family: var(--font-mono);
+      font-size: 0.94rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+      white-space: nowrap;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      transform: translateY(-1px);
+      border-color: color-mix(in srgb, var(--foreground) 24%, var(--border) 76%);
+      outline: none;
+    }
+
+    .button-primary {
+      background: linear-gradient(135deg, rgba(250, 250, 250, 0.98), rgba(230, 230, 234, 0.96));
+      color: #050505;
+    }
+
+    .button-accent {
+      background: linear-gradient(135deg, rgba(167, 234, 220, 0.18), rgba(175, 205, 246, 0.2));
+    }
+
+    .status {
+      margin: 0;
+      min-height: 2.75rem;
+      color: color-mix(in srgb, var(--muted-foreground) 86%, white 10%);
+      font-size: clamp(0.92rem, 1.2vw, 1rem);
+      line-height: 1.4;
+      display: flex;
+      align-items: flex-start;
+    }
+
+    .status[data-tone="success"] {
+      color: #b6f7df;
+    }
+
+    .status[data-tone="error"] {
+      color: #ffb6b6;
+    }
+
+    .micro-copy {
+      display: grid;
+      gap: 0.5rem;
+      max-width: 30rem;
+    }
+
+    .micro-copy p {
+      margin: 0;
+      color: color-mix(in srgb, var(--muted-foreground) 82%, white 12%);
+      font-size: clamp(0.98rem, 1.5vw, 1.08rem);
+      line-height: 1.5;
+    }
+
+    .flicker-in {
+      animation: flicker-in 740ms linear both;
+    }
+
+    @keyframes flicker-in {
+      0% { opacity: 0; }
+      10% { opacity: 0.2; }
+      25% { opacity: 0.82; }
+      36% { opacity: 0.14; }
+      54% { opacity: 0.92; }
+      72% { opacity: 0.42; }
+      100% { opacity: 1; }
+    }
+
+    @media (max-width: 759px) {
+      .tile-one,
+      .tile-two,
+      .tile-three {
+        opacity: 0.58;
+      }
+
+      .content {
+        min-height: auto;
+      }
+
+      .panel {
+        min-height: 340px;
+      }
+
+      .button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero-shell">
+      <div class="hero-card flicker-in">
+        <span class="corner-box corner-top-left" aria-hidden="true"></span>
+        <span class="corner-box corner-top-right" aria-hidden="true"></span>
+        <span class="corner-box corner-bottom-left" aria-hidden="true"></span>
+        <span class="corner-box corner-bottom-right" aria-hidden="true"></span>
+
+        <div class="hero-grid" id="desktop-grid" aria-hidden="true"></div>
+        <div class="hero-grid-mobile" id="mobile-grid" aria-hidden="true"></div>
+
+        <div class="gradient-tile tile-one" aria-hidden="true"></div>
+        <div class="gradient-tile tile-two" aria-hidden="true"></div>
+        <div class="gradient-tile tile-three" aria-hidden="true"></div>
+
+        <div class="content">
+          <header class="micro-copy">
+            <p class="eyebrow">// monospace</p>
+            <h1 class="title">Paste text. Get monospaced. Copy fast.</h1>
+            <!-- <p class="lead">Paste text, it copies the monospaced version instantly.</p> -->
+          </header>
+
+          <section class="workspace" aria-label="Text converter">
+            <article class="panel">
+              <div class="panel-head">
+                <p class="panel-label">Input</p>
+                <span class="meta" id="input-count">0 chars</span>
+              </div>
+
+              <textarea
+                class="text-field"
+                id="source-text"
+                spellcheck="false"
+                autocapitalize="off"
+                autocomplete="off"
+                autocorrect="off"
+                autofocus
+                placeholder="Paste text here…"
+              ></textarea>
+
+              <div class="panel-foot">
+                <div class="button-row">
+                  <button class="button button-accent" id="paste-button" type="button">Paste + Convert</button>
+                  <button class="button" id="clear-button" type="button">Clear</button>
+                </div>
+                <p class="status" id="status" aria-live="polite">Ready for paste.</p>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-head">
+                <p class="panel-label">Monospace Output</p>
+                <span class="meta" id="output-count">0 chars</span>
+              </div>
+
+              <textarea
+                class="text-field output-field"
+                id="output-text"
+                spellcheck="false"
+                readonly
+                placeholder="…"
+              ></textarea>
+
+              <div class="panel-foot">
+                <div class="button-row">
+                  <button class="button button-primary" id="copy-button" type="button">Copy Output</button>
+                </div>
+                <p class="status" id="copy-hint" aria-live="polite">Auto-copy ready.</p>
+              </div>
+            </article>
+          </section>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const desktopPattern = [
+      ["dash-right", "dash-right", "dash-right", "dash-right", "dash-right", "dash-right", "dash-right", "dash-right", "dash-right", ""],
+      ["dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top", "dash-top"],
+      ["dash-top-solid", "dash-top-solid", "dash-top-solid", "dash-top-right-solid", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top"],
+      ["", "", "", "", "dash-top-solid", "dash-top-right-solid", "dash-top-right", "dash-top-right", "dash-top", "dash-top"],
+      ["", "", "", "", "", "dash-right-solid", "dash-top-right", "dash-top-right", "dash-top", "dash-top"],
+      ["", "", "", "", "", "dash-right-solid", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right"],
+      ["", "", "", "", "dash-bottom-solid dash-right-solid", "dash-top-solid dash-right", "dash-top-right", "dash-top", "dash-top", "dash-top"],
+      ["dash-right", "dash-right", "dash-right", "dash-right", "dash-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top", "dash-top"],
+      ["dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top"]
+    ];
+
+    const mobilePattern = [
+      ["dash-right", "dash-right", "dash-right", "dash-right", ""],
+      ["dash-top", "dash-top", "dash-top", "dash-top", "dash-top"],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["", "", "", "", ""],
+      ["dash-top-right", "dash-top-right", "dash-top-right", "dash-top-right", "dash-top"]
+    ];
+
+    function renderGrid(target, pattern) {
+      pattern.flat().forEach((className) => {
+        const cell = document.createElement("div");
+        cell.className = ["grid-cell", className].filter(Boolean).join(" ");
+        target.appendChild(cell);
+      });
+    }
+
+    renderGrid(document.getElementById("desktop-grid"), desktopPattern);
+    renderGrid(document.getElementById("mobile-grid"), mobilePattern);
+
+    const input = document.getElementById("source-text");
+    const output = document.getElementById("output-text");
+    const status = document.getElementById("status");
+    const copyHint = document.getElementById("copy-hint");
+    const inputCount = document.getElementById("input-count");
+    const outputCount = document.getElementById("output-count");
+    const pasteButton = document.getElementById("paste-button");
+    const copyButton = document.getElementById("copy-button");
+    const clearButton = document.getElementById("clear-button");
+
+    function toMonospace(text) {
+      let result = "";
+
+      for (const char of text) {
+        const codePoint = char.codePointAt(0);
+
+        if (codePoint >= 0x41 && codePoint <= 0x5a) {
+          result += String.fromCodePoint(0x1d670 + (codePoint - 0x41));
+          continue;
+        }
+
+        if (codePoint >= 0x61 && codePoint <= 0x7a) {
+          result += String.fromCodePoint(0x1d68a + (codePoint - 0x61));
+          continue;
+        }
+
+        if (codePoint >= 0x30 && codePoint <= 0x39) {
+          result += String.fromCodePoint(0x1d7f6 + (codePoint - 0x30));
+          continue;
+        }
+
+        result += char;
+      }
+
+      return result;
+    }
+
+    function setStatus(target, message, tone) {
+      target.textContent = message;
+      target.dataset.tone = tone || "neutral";
+    }
+
+    function updateCounts(source, converted) {
+      inputCount.textContent = `${source.length} chars`;
+      outputCount.textContent = `${converted.length} chars`;
+    }
+
+    function syncOutput(statusMessage) {
+      const converted = toMonospace(input.value);
+      output.value = converted;
+      updateCounts(input.value, converted);
+
+      if (statusMessage) {
+        setStatus(status, statusMessage, "neutral");
+      }
+
+      return converted;
+    }
+
+    function insertTextAtCursor(textarea, text) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const before = textarea.value.slice(0, start);
+      const after = textarea.value.slice(end);
+
+      textarea.value = `${before}${text}${after}`;
+      const cursor = start + text.length;
+      textarea.setSelectionRange(cursor, cursor);
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    async function copyText(text) {
+      if (!text) {
+        return false;
+      }
+
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          await navigator.clipboard.writeText(text);
+          return true;
+        }
+      } catch (error) {
+        // Fall through to execCommand for local-file usage.
+      }
+
+      const activeElement = document.activeElement;
+      const selection =
+        activeElement &&
+        typeof activeElement.selectionStart === "number" &&
+        typeof activeElement.selectionEnd === "number"
+          ? {
+              start: activeElement.selectionStart,
+              end: activeElement.selectionEnd
+            }
+          : null;
+
+      const helper = document.createElement("textarea");
+      helper.value = text;
+      helper.setAttribute("readonly", "");
+      helper.style.position = "fixed";
+      helper.style.opacity = "0";
+      helper.style.pointerEvents = "none";
+      document.body.appendChild(helper);
+      helper.focus();
+      helper.select();
+      helper.setSelectionRange(0, helper.value.length);
+      const copied = document.execCommand("copy");
+      helper.remove();
+
+      if (activeElement && typeof activeElement.focus === "function") {
+        activeElement.focus();
+
+        if (selection && typeof activeElement.setSelectionRange === "function") {
+          activeElement.setSelectionRange(selection.start, selection.end);
+        }
+      }
+
+      return copied;
+    }
+
+    async function copyCurrentOutput(successMessage, options = {}) {
+      const {
+        failureMessage = "Copy failed automatically. Output is selected for manual copy.",
+        emptyMessage = "Nothing to copy yet.",
+        selectOnFailure = true,
+        inputSuccessMessage = null,
+        inputFailureMessage = null
+      } = options;
+      const converted = syncOutput();
+
+      if (!converted) {
+        setStatus(copyHint, emptyMessage, "error");
+        setStatus(status, "Ready for paste.", "neutral");
+        return;
+      }
+
+      const copied = await copyText(converted);
+
+      if (copied) {
+        setStatus(copyHint, successMessage, "success");
+        if (inputSuccessMessage) {
+          setStatus(status, inputSuccessMessage, "success");
+        }
+        return;
+      }
+
+      if (selectOnFailure) {
+        output.focus();
+        output.select();
+      }
+
+      setStatus(copyHint, failureMessage, "error");
+      if (inputFailureMessage) {
+        setStatus(status, inputFailureMessage, "error");
+      }
+    }
+
+    input.addEventListener("input", async () => {
+      syncOutput("Converting.");
+
+      if (!input.value) {
+        setStatus(copyHint, "Ready for paste.", "neutral");
+        setStatus(status, "Ready for paste.", "neutral");
+        return;
+      }
+
+      await copyCurrentOutput("Copied automatically.", {
+        failureMessage: "Auto copy was blocked. Use Copy Output.",
+        selectOnFailure: false,
+        inputSuccessMessage: "Converted and copied.",
+        inputFailureMessage: "Converted. Auto copy blocked."
+      });
+    });
+
+    input.addEventListener("paste", (event) => {
+      event.preventDefault();
+      const pasted = event.clipboardData.getData("text/plain");
+      insertTextAtCursor(input, pasted);
+    });
+
+    pasteButton.addEventListener("click", async () => {
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        try {
+          input.value = await navigator.clipboard.readText();
+          syncOutput("Clipboard text loaded.");
+          await copyCurrentOutput("Clipboard converted and copied.", {
+            inputSuccessMessage: "Clipboard converted and copied.",
+            inputFailureMessage: "Clipboard converted. Auto copy blocked."
+          });
+          input.focus();
+          return;
+        } catch (error) {
+          setStatus(status, "Clipboard read was blocked. Paste manually into the input box.", "error");
+          return;
+        }
+      }
+
+      setStatus(status, "Clipboard read is unavailable here. Paste manually into the input box.", "error");
+    });
+
+    copyButton.addEventListener("click", async () => {
+      await copyCurrentOutput("Output copied.");
+    });
+
+    clearButton.addEventListener("click", () => {
+      input.value = "";
+      output.value = "";
+      updateCounts("", "");
+      setStatus(status, "Ready for paste.", "neutral");
+      setStatus(copyHint, "Auto-copy ready.", "neutral");
+      input.focus();
+    });
+
+    syncOutput("Ready for paste.");
+    window.addEventListener("load", () => {
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
+    });
+  </script>
+</body>
+</html>
