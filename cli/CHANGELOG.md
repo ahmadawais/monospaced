@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.3](https://github.com/ahmadawais/monospace/compare/0.0.2...0.0.3) (2026-03-06)
+
+### Documentation
+
+* readme ([4e30cab](https://github.com/ahmadawais/monospace/commit/4e30cab2a02440bf0bad77952b72e9f1494d32c4))
+* readme ([1846100](https://github.com/ahmadawais/monospace/commit/18461003171028b6d1bd5f5725290c88e069e0b5))
+
 ## 0.0.2 (2026-03-06)
 
 ### Features
